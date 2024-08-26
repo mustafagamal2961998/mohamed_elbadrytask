@@ -1,9 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -17,6 +22,11 @@ class AuthController extends Controller
         return view('Auth.index');
     }
 
+    public function login(LoginRequest $request){
+        if(Auth::attempt(['email'=>$request->email,'password'=>$request->password])){
+            return redirect()->route('home.index');
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -33,9 +43,17 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(RegisterRequest $request)
+    {   
+        $request->merge([
+            'password'=>Hash::make($request->password),
+        ]);
+        $store = User::create($request->all());
+        if($store){
+                Auth::loginUsingId($store->id);
+                return redirect()->route('home.index');
+        }
+        
     }
 
     /**

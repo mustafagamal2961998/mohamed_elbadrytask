@@ -1,11 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Api\Comment;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Comment\CommentRequest;
+use App\Http\Resources\CommentResource;
+use App\Mail\NewCommentMail;
+use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
-class PostController extends Controller
+class CommentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,17 +20,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+       
     }
 
     /**
@@ -33,9 +29,15 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CommentRequest $request)
     {
-        //
+        $request->merge(['user_id'=>Auth::id()]);
+        $store = Comment::create($request->all());
+        Mail::to($store->post->user->email)->send(new NewCommentMail($store->content,Auth::user()->name));
+        return response()->json([
+            'data'=>'Comment created successfully!',
+            'statusCode'=>200,
+        ]);
     }
 
     /**
@@ -45,17 +47,6 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }
@@ -80,6 +71,11 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $delete = Comment::find($id);
+        $delete->delete();
+        return response()->json([
+            'data'=>'Comment deleted successfully!',
+            'statusCode'=>200,
+        ]);
     }
 }

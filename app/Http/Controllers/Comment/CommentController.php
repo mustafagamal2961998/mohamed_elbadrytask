@@ -1,9 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Comment;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Comment\CommentRequest;
+use App\Mail\NewCommentMail;
+use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class CommentController extends Controller
 {
@@ -33,9 +38,13 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CommentRequest $request)
     {
-        //
+        $request->merge(['user_id'=>Auth::id()]);
+        $store = Comment::create($request->all());
+        Mail::to($store->post->user->email)->send(new NewCommentMail($store->content,Auth::user()->name));
+        return redirect()->back()->with('success','Comment added successfully!');
+
     }
 
     /**
@@ -80,6 +89,9 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $delete = Comment::find($id);
+        $delete->delete();
+        return redirect()->back()->with('success','Comment deleted successfully!');
+
     }
 }

@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Blog\BlogController;
+use App\Http\Controllers\Api\Comment\CommentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +17,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('login',[AuthController::class,'login']);
+Route::post('register',[AuthController::class,'register']);
+
+Route::group(['middleware'=>'auth:sanctum'],function(){
+    Route::apiResource('blogs',BlogController::class);
+    Route::apiResource('comments',CommentController::class);
+
 });

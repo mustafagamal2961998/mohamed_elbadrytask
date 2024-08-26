@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\User\AuthController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Comment\CommentController;
+use App\Http\Controllers\Home\HomeController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,5 +15,11 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::post('login',[AuthController::class,'login'])->name('login');
 Route::resource('/',AuthController::class);
+
+Route::group(['middleware'=>'auth'],function(){
+
+    Route::resource('home',HomeController::class);
+    Route::resource('comments',CommentController::class);
+});

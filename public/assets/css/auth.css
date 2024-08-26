@@ -16,7 +16,7 @@ html{
 
 body{
 	height: 100%;
-	background: #e9ebee;
+	background: #1a202b;
 	color: #1d2129;
 	display: flex;
 	align-items: center;
@@ -316,4 +316,20 @@ button:focus {
 			opacity: 0;
 			transform: scale(0.8)
 	}
+}
+
+.alert-error-message{
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+.alert-error-message div{
+	width: 320px;
+	font-size: 16px;
+	padding: 10px 10px;
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+	border-radius: 5px;
+	margin:  10px 0;
 }

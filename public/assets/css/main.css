@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
+
+*{
+ padding:0;
+ margin:0;
+ box-sizing:border-box;
+}
+
+body{
+
+    background-color: #1a202b;
+    font-family: "Cairo", sans-serif;
+
+}
+
+.success-message-alerts-container{
+    position:fixed;
+    top: 0;
+    right: 10px;
+}
+.success-message-alerts-container .success-message-alerts-content{
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    padding: 5px;
+    border: 1px solid transparent;
+    /* border-radius: 5px; */
+    border-left: 5px solid #155724;
+}
